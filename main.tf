@@ -53,11 +53,24 @@ resource "aws_vpc" "main" {
     instance_tenancy = "default"
     enable_dns_support = true
     enable_dns_hostnames = true
+    cidr_block = "10.0.0.0/16"
 
      tags = {
          Name = "main"
+            }
+        }
+
+
+ resource "aws_subnet" "subnet1" {
+   vpc_id     = "${aws_vpc.main.id}"
+   cidr_block = "10.0.1.0/24"
+   availability_zone = "us-west-1a"
+
+
+  tags  =  {
+    Name = "app-subnet-1"
     }
-}
+ }
 
 resource "aws_security_group" "web-sg" {
   name = "${random_pet.sg.id}-sg"
