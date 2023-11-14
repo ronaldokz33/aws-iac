@@ -13,7 +13,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-west-2"
+  region = "us-west-1"
 }
 
 resource "random_pet" "sg" {}
@@ -49,8 +49,19 @@ resource "aws_instance" "web" {
               EOF
 }
 
+resource "aws_vpc" "main" {
+    instance_tenancy = "default"
+    enable_dns_support = true
+    enable_dns_hostnames = true
+
+     tags = {
+         Name = "main"
+    }
+}
+
 resource "aws_security_group" "web-sg" {
   name = "${random_pet.sg.id}-sg"
+  vpc_id      = aws_vpc.main.id
   ingress {
     from_port   = 8080
     to_port     = 8080
