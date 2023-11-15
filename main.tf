@@ -16,7 +16,32 @@ provider "aws" {
   region = "us-west-1"
 }
 
-resource "random_pet" "sg" {}
+resource "aws_vpc" "main" {
+    instance_tenancy = "default"
+    enable_dns_support = true
+    enable_dns_hostnames = true
+    cidr_block = "10.1.0.0/16"
+
+     tags = {
+         Name = "main"
+            }
+}
+
+
+ resource "aws_subnet" "subnet1" {
+   vpc_id     = "${aws_vpc.main.id}"
+   cidr_block = "10.1.0.0/16"
+   availability_zone = "us-west-1a"
+
+
+  tags  =  {
+    Name = "app-subnet-1"
+    }
+ }
+
+resource "random_pet" "sg" {
+  vpc_id      = aws_vpc.main.id
+}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -49,44 +74,22 @@ resource "aws_instance" "web" {
               EOF
 }
 
-resource "aws_vpc" "main" {
-    instance_tenancy = "default"
-    enable_dns_support = true
-    enable_dns_hostnames = true
-    cidr_block = "10.1.0.0/16"
 
-     tags = {
-         Name = "main"
-            }
-        }
-
-
- resource "aws_subnet" "subnet1" {
-   vpc_id     = "${aws_vpc.main.id}"
-   cidr_block = "10.1.0.0/16"
-   availability_zone = "us-west-1a"
-
-
-  tags  =  {
-    Name = "app-subnet-1"
-    }
- }
 
 resource "aws_security_group" "web-sg" {
   name = "${random_pet.sg.id}-sg"
-  vpc_id      = aws_vpc.main.id
   ingress {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["10.1.0.0/16"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
   // connectivity to ubuntu mirrors is required to run `apt-get update` and `apt-get install apache2`
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["10.1.0.0/16"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
