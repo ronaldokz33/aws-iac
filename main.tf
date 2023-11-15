@@ -53,7 +53,7 @@ resource "aws_vpc" "main" {
     instance_tenancy = "default"
     enable_dns_support = true
     enable_dns_hostnames = true
-    cidr_block = "0.0.0.0/24"
+    cidr_block = "10.0.0.0/8"
 
      tags = {
          Name = "main"
@@ -63,7 +63,7 @@ resource "aws_vpc" "main" {
 
  resource "aws_subnet" "subnet1" {
    vpc_id     = "${aws_vpc.main.id}"
-   cidr_block = "0.0.0.0/24"
+   cidr_block = "10.0.0.0/8"
    availability_zone = "us-west-1a"
 
 
@@ -79,14 +79,14 @@ resource "aws_security_group" "web-sg" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/24"]
+    cidr_blocks = ["10.0.0.0/8"]
   }
   // connectivity to ubuntu mirrors is required to run `apt-get update` and `apt-get install apache2`
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/24"]
+    cidr_blocks = ["10.0.0.0/8"]
   }
 }
 
