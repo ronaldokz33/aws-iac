@@ -20,11 +20,21 @@ resource "aws_vpc" "main" {
     instance_tenancy = "default"
     enable_dns_support = true
     enable_dns_hostnames = true
-    cidr_block = "10.0.0.0/16"
+    cidr_block = "10.1.0.0/16"
 
      tags = {
          Name = "main"
             }
+}
+
+resource "aws_subnet" "example" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.1.1.0/24"
+  availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "tf-example"
+  }
 }
 
 resource "random_pet" "sg" {}
@@ -49,6 +59,7 @@ resource "aws_instance" "web" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
+  subnet_id              = aws_subnet.example.id
 
   user_data = <<-EOF
               #!/bin/bash
@@ -65,6 +76,7 @@ resource "aws_instance" "web" {
 resource "aws_security_group" "web-sg" {
   name        = "${random_pet.sg.id}-sg"
   vpc_id      = aws_vpc.main.id
+
   ingress {
     from_port   = 8080
     to_port     = 8080
