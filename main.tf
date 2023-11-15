@@ -39,9 +39,7 @@ resource "aws_vpc" "main" {
     }
  }
 
-resource "random_pet" "sg" {
-  vpc_id      = aws_vpc.main.id
-}
+resource "random_pet" "sg" {}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -77,7 +75,8 @@ resource "aws_instance" "web" {
 
 
 resource "aws_security_group" "web-sg" {
-  name = "${random_pet.sg.id}-sg"
+  name        = "${random_pet.sg.id}-sg"
+  vpc_id      = aws_vpc.main.id
   ingress {
     from_port   = 8080
     to_port     = 8080
