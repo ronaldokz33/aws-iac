@@ -13,7 +13,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "sa-east-1"
 }
 
 resource "aws_vpc" "main" {
@@ -30,7 +30,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "example" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.1.1.0/24"
-  availability_zone = "us-east-1a"
+  availability_zone = "sa-east-1a"
 
   tags = {
     Name = "tf-example"
