@@ -27,17 +27,6 @@ resource "aws_vpc" "main" {
             }
 }
 
-
-resource "aws_subnet" "subnet1" {
-   vpc_id     = "${aws_vpc.main.id}"
-   cidr_block = "10.1.0.0/16"
-   availability_zone = "us-east-1a"
-
-  tags  =  {
-    Name = "app-subnet-1"
-    }
- }
-
 resource "random_pet" "sg" {}
 
 data "aws_ami" "ubuntu" {
