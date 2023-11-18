@@ -17,8 +17,9 @@ resource "aws_iam_role" "iam_for_lambda" {
 }
 
 resource "aws_lambda_function" "lambda_terraform" {
-  function_name = "lambda-terraform"
-  filename      = "Bpd.Order.Processing.Lambda.zip"
+  function_name = "bpd-lambda-terraform"
+  s3_bucket     = "test-1234567a"
+  s3_key        = "dummy-function.zip"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "Bpd.Order.Processing.Lambda::Bpd.Order.Processing.Lambda.Function::Handler"
 
