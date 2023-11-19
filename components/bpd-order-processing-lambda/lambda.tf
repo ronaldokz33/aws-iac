@@ -1,4 +1,4 @@
-module "order_Processing_lambda" {
+module "order_processing_lambda" {
     source              = "../../modules/lambda"
 
     lambda_name         = local.app_name
